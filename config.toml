@@ -1,0 +1,5 @@
+[ticker]
+  coins = ["cardano","fantom","ethereum","bitcoin"]
+  symbols = ["ADA", "FTM", "ETH", "BTC"]
+  vsCurrency = "cad"
+  refreshRate = 500
