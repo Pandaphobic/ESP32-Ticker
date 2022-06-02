@@ -7,6 +7,7 @@ Simple Crypto ticker that depends on a locally deployed REST server. The rest se
 Build out the NodeJS REST API that will provide the ESP32 with the output it will send to the screen.
 
 - make api calls based on config.toml
+- dockerize the server https://www.youtube.com/watch?v=CsWoMpK3EtE&t=336
 - deploy on home server
 
 ## Stage 2 - ESP32

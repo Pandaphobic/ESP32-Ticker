@@ -22,18 +22,25 @@ const app = (0, express_1.default)();
 const port = process.env.PORT;
 app.get("/ticker-2004", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let configData = toml_1.default.parse(fs_1.default.readFileSync("./config.toml", "utf-8"));
-    const COINS_TO_GET = configData.ticker.coins.join("%2C");
+    const COINS_TO_GET = configData.ticker.coins;
     const VS_CURRENCY = configData.ticker.vsCurrency.toLowerCase();
     const SYMBOLS = configData.ticker.symbols;
-    var coinPrices = yield getCoinPrices(COINS_TO_GET, VS_CURRENCY);
-    var coinRows = [
-        `${SYMBOLS[0].toUpperCase()}: ${coinPrices[configData.ticker.coins[0]][VS_CURRENCY]}`,
-        `${SYMBOLS[1].toUpperCase()}: ${coinPrices[configData.ticker.coins[1]][VS_CURRENCY]}`,
-        `${SYMBOLS[2].toUpperCase()}: ${coinPrices[configData.ticker.coins[2]][VS_CURRENCY]}`,
-        `${SYMBOLS[3].toUpperCase()}: ${coinPrices[configData.ticker.coins[3]][VS_CURRENCY]}`,
-    ];
-    console.log(coinRows);
-    res.send(coinRows);
+    var coinPrices = yield getCoinPrices(COINS_TO_GET.join("%2C"), VS_CURRENCY);
+    // console.log(COINS_TO_GET);
+    // var coinRows = [
+    //   `${SYMBOLS[0].toUpperCase()}: ${coinPrices[COINS_TO_GET[0]][VS_CURRENCY]}`,
+    //   `${SYMBOLS[1].toUpperCase()}: ${coinPrices[COINS_TO_GET[1]][VS_CURRENCY]}`,
+    //   `${SYMBOLS[2].toUpperCase()}: ${coinPrices[COINS_TO_GET[2]][VS_CURRENCY]}`,
+    //   `${SYMBOLS[3].toUpperCase()}: ${coinPrices[COINS_TO_GET[3]][VS_CURRENCY]}`,
+    // ];
+    var coinsObject = {
+        [COINS_TO_GET[0]]: coinPrices[COINS_TO_GET[0]][VS_CURRENCY],
+        [COINS_TO_GET[1]]: coinPrices[COINS_TO_GET[1]][VS_CURRENCY],
+        [COINS_TO_GET[2]]: coinPrices[COINS_TO_GET[2]][VS_CURRENCY],
+        [COINS_TO_GET[3]]: coinPrices[COINS_TO_GET[3]][VS_CURRENCY],
+    };
+    console.log(coinsObject);
+    res.send(JSON.stringify(coinsObject));
 }));
 app.listen(port, () => {
     console.log(`⚡️[Ticker-Server]: Server is running at https://localhost:${port}`);

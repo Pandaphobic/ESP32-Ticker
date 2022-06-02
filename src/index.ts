@@ -11,29 +11,29 @@ const port = process.env.PORT;
 
 app.get("/ticker-2004", async (req: Request, res: Response) => {
   let configData = TOML.parse(fs.readFileSync("./config.toml", "utf-8"));
-  const COINS_TO_GET = configData.ticker.coins.join("%2C");
+  const COINS_TO_GET = configData.ticker.coins;
   const VS_CURRENCY = configData.ticker.vsCurrency.toLowerCase();
   const SYMBOLS = configData.ticker.symbols;
 
-  var coinPrices = await getCoinPrices(COINS_TO_GET, VS_CURRENCY);
-  var coinRows = [
-    `${SYMBOLS[0].toUpperCase()}: ${
-      coinPrices[configData.ticker.coins[0]][VS_CURRENCY]
-    }`,
-    `${SYMBOLS[1].toUpperCase()}: ${
-      coinPrices[configData.ticker.coins[1]][VS_CURRENCY]
-    }`,
-    `${SYMBOLS[2].toUpperCase()}: ${
-      coinPrices[configData.ticker.coins[2]][VS_CURRENCY]
-    }`,
-    `${SYMBOLS[3].toUpperCase()}: ${
-      coinPrices[configData.ticker.coins[3]][VS_CURRENCY]
-    }`,
-  ];
+  var coinPrices = await getCoinPrices(COINS_TO_GET.join("%2C"), VS_CURRENCY);
+  // console.log(COINS_TO_GET);
+  // var coinRows = [
+  //   `${SYMBOLS[0].toUpperCase()}: ${coinPrices[COINS_TO_GET[0]][VS_CURRENCY]}`,
+  //   `${SYMBOLS[1].toUpperCase()}: ${coinPrices[COINS_TO_GET[1]][VS_CURRENCY]}`,
+  //   `${SYMBOLS[2].toUpperCase()}: ${coinPrices[COINS_TO_GET[2]][VS_CURRENCY]}`,
+  //   `${SYMBOLS[3].toUpperCase()}: ${coinPrices[COINS_TO_GET[3]][VS_CURRENCY]}`,
+  // ];
 
-  console.log(coinRows);
+  var coinsObject = {
+    [COINS_TO_GET[0]]: coinPrices[COINS_TO_GET[0]][VS_CURRENCY],
+    [COINS_TO_GET[1]]: coinPrices[COINS_TO_GET[1]][VS_CURRENCY],
+    [COINS_TO_GET[2]]: coinPrices[COINS_TO_GET[2]][VS_CURRENCY],
+    [COINS_TO_GET[3]]: coinPrices[COINS_TO_GET[3]][VS_CURRENCY],
+  };
 
-  res.send(coinRows);
+  console.log(coinsObject);
+
+  res.send(JSON.stringify(coinsObject));
 });
 
 app.listen(port, () => {
