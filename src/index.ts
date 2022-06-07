@@ -16,19 +16,33 @@ app.get("/ticker-2004", async (req: Request, res: Response) => {
   const SYMBOLS = configData.ticker.symbols;
 
   var coinPrices = await getCoinPrices(COINS_TO_GET.join("%2C"), VS_CURRENCY);
-  // console.log(COINS_TO_GET);
-  // var coinRows = [
-  //   `${SYMBOLS[0].toUpperCase()}: ${coinPrices[COINS_TO_GET[0]][VS_CURRENCY]}`,
-  //   `${SYMBOLS[1].toUpperCase()}: ${coinPrices[COINS_TO_GET[1]][VS_CURRENCY]}`,
-  //   `${SYMBOLS[2].toUpperCase()}: ${coinPrices[COINS_TO_GET[2]][VS_CURRENCY]}`,
-  //   `${SYMBOLS[3].toUpperCase()}: ${coinPrices[COINS_TO_GET[3]][VS_CURRENCY]}`,
-  // ];
+  var coinNames = COINS_TO_GET.map((coin: string) => {
+    return capitalizeFirstLetter(coin);
+  });
+
+  function getCoinStrings() {
+    let coins: String[] = [];
+
+    for (let i = 0; i <= 3; i++) {
+      let key: String = `${coinNames[i]}`;
+      let price: String = `${coinPrices[COINS_TO_GET[i]][VS_CURRENCY]}`;
+      let spaceCount = 20 - key.length - price.length;
+
+      const coinString = key + "_".repeat(Number(spaceCount - 1)) + "$" + price;
+      coins.push(coinString);
+      console.log(spaceCount);
+    }
+
+    return coins;
+  }
+
+  const coinStrings = getCoinStrings();
 
   var coinsObject = {
-    [COINS_TO_GET[0]]: coinPrices[COINS_TO_GET[0]][VS_CURRENCY],
-    [COINS_TO_GET[1]]: coinPrices[COINS_TO_GET[1]][VS_CURRENCY],
-    [COINS_TO_GET[2]]: coinPrices[COINS_TO_GET[2]][VS_CURRENCY],
-    [COINS_TO_GET[3]]: coinPrices[COINS_TO_GET[3]][VS_CURRENCY],
+    0: coinStrings[0],
+    1: coinStrings[1],
+    2: coinStrings[2],
+    3: coinStrings[3],
   };
 
   console.log(coinsObject);
@@ -53,3 +67,7 @@ const getCoinPrices = async (COINS_TO_GET: string, VS_CURRENCY: string) => {
     console.log(`PRICE CALL FAILED: 02 ${err}`);
   }
 };
+
+function capitalizeFirstLetter(string: String) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
